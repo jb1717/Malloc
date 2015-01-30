@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Thu Jan 29 11:59:28 2015 Jean-Baptiste Grégoire
-** Last update Fri Jan 30 16:17:04 2015 Jean-Baptiste Grégoire
+** Last update Fri Jan 30 18:39:15 2015 Jean-Baptiste Grégoire
 */
 
 #ifndef MALLOC_H_
@@ -19,6 +19,13 @@ enum		e_move
   {
     TO_FREE = 0,
     TO_USED
+  };
+
+enum		e_algo
+  {
+    WORST_FIT_ALGO = 0,
+    BEST_FIT_ALGO,
+    FIRST_FIT_ALGO
   };
 
 typedef struct	s_header

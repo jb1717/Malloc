@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Thu Jan 29 11:54:58 2015 Jean-Baptiste Grégoire
-** Last update Fri Jan 30 18:22:01 2015 Jean-Baptiste Grégoire
+** Last update Fri Jan 30 19:17:01 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -107,8 +107,8 @@ void			*best_fit(t_header *used_list, t_header *free_list,
 	  min = it;
 	  prev_min = prev;
 	}
-      min = ((min && min->size > it->size) ? it : min);
-      prev_min = ((min && min->size > it->size) ? prev : prev_min);
+      min = ((min && min->size > it->size && it->size + sizeof(t_header) >= size) ? it : min);
+      prev_min = ((min && min->size > it->size && it->size + sizeof(t_header) >= size) ? prev : prev_min);
       if (it != free_list)
 	prev = prev->next;
       it = it->next;
@@ -151,6 +151,33 @@ void			*worst_fit(t_header *used_list, t_header *free_list,
   return (NULL);
 }
 
+void			*manage_algo(t_header *used, t_header *free, size_t size)
+{
+  void			*addr;
+  char			algo;
+  char			run;
+
+  algo = rand % 3;
+  run = 1;
+  while (run)
+    {
+      if (algo == WORST_FIT_ALGO)
+	addr = worst_fit(used, free, size);
+      else if (algo == BEST_FIT_ALGO)
+	addr = best_fit(used, free, size);
+      else
+	addr = first_fit(used, free, size);  
+      if (addr)
+	run = 0;
+      else
+	{
+	  if (sbrk(MALLOC_PAGE_SIZE) == (void *)(-1))
+	    return (NULL);
+	}
+    }
+  return (addr);
+}
+
 void			*malloc(size_t size)
 {
   static t_header	*_used = NULL;
@@ -162,6 +189,7 @@ void			*malloc(size_t size)
       _free->addr = _free + sizeof(t_header);
       _free->size = MALLOC_PAGE_SIZE;
       _free->next = NULL;
+      srand(time());
     }
-  
+  return (manage_algo(_used, _free, size));
 }
