@@ -5,12 +5,18 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Thu Jan 29 11:54:58 2015 Jean-Baptiste Grégoire
-** Last update Fri Jan 30 16:42:04 2015 Jean-Baptiste Grégoire
+** Last update Fri Jan 30 17:08:06 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
 
-void			add_block(t_header *prev, t_header *current, size_t size)
+/*
+** - This function split the memory of the free block. Add the used part on the used_list
+** and the free one to the free_list. I'm not sure about the special case
+** (juste one block on one list, or no blok at all for exemple).
+*/
+void			add_block_to_used(t_header **used, t_header *prev,
+					  t_header *current, size_t size)
 {
   t_header		*new;
   size_t		sub_block_size;
@@ -18,10 +24,12 @@ void			add_block(t_header *prev, t_header *current, size_t size)
   sub_block_size = current->size - size - sizeof(t_header);
   new = current;
   new->size = size;
-  current = current + sizeof(t_header) + size;
+  new->next = *used;
+  *used = new;
+  current = new + sizeof(t_header) + size;
   current->size = sub_block_size;
-  new->next = current;
-  prev->next = new;
+  current->next = NULL;
+  prev->next = current;
 }
 
 /*
@@ -50,6 +58,9 @@ void			switch_block(t_header **used_list, t_header **free_list,
     }
 }
 
+/*
+** - This function just search from the first block of memory large enought to contain the size asked.
+*/
 void			*first_fit(t_header *used_list, t_header *free_list, size_t size)
 {
   t_header		*it;
@@ -62,9 +73,13 @@ void			*first_fit(t_header *used_list, t_header *free_list, size_t size)
       if (size + sizeof(t_header) == it->size)
 	{
 	  switch_block(&used_list, &free_list, &prev, TO_USED);
+	  return (it);
 	}
       else if (size + sizeof(t_header) < it->size)
-	add_block(prev, it, size);
+	{
+	  add_block(prev, it, size);
+	  return (it);
+	}
       if (it != free_list)
 	prev = prev->next;
       it = it->next;
