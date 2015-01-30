@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Thu Jan 29 11:54:58 2015 Jean-Baptiste Grégoire
-** Last update Fri Jan 30 17:08:06 2015 Jean-Baptiste Grégoire
+** Last update Fri Jan 30 17:42:40 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -77,7 +77,7 @@ void			*first_fit(t_header *used_list, t_header *free_list, size_t size)
 	}
       else if (size + sizeof(t_header) < it->size)
 	{
-	  add_block(prev, it, size);
+	  add_block_to_used(&used_list, prev, it, size);
 	  return (it);
 	}
       if (it != free_list)
@@ -87,8 +87,36 @@ void			*first_fit(t_header *used_list, t_header *free_list, size_t size)
   return (NULL);
 }
 
-void			*best_fit(t_header *used_list, t_header *free_list, size_t size)
+/*
+** - This function search the smallest block of memory large enougth to contain the size asked.
+*/
+void			*best_fit(t_header *used_list, t_header *free_list,
+				  size_t size)
 {
+  t_header		*it;
+  t_header		*prev;
+  t_header		*min;
+  t_header		*prev_min;
+
+  prev = it = free_list;
+  prev_min = min = NULL;
+  while (it)
+    {
+      if (!min && size + sizeof(t_header) <= it->size)
+	{
+	  min = it;
+	  prev_min = prev;
+	}
+      min = ((min && min->size > it->size) ? it : min);
+      prev_min = ((min && min->size > it->size) ? prev : prev_min);
+      if (it != free_list)
+	prev = prev->next;
+      it = it->next;
+    }
+  if (min == NULL)
+    return (NULL);
+  add_block_to_used(&used_list, prev_min, min, size);
+  return (min);
 }
 
 void			*malloc(size_t size)
