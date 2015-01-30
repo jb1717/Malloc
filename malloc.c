@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Thu Jan 29 11:54:58 2015 Jean-Baptiste Grégoire
-** Last update Fri Jan 30 17:42:40 2015 Jean-Baptiste Grégoire
+** Last update Fri Jan 30 18:22:01 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -117,6 +117,38 @@ void			*best_fit(t_header *used_list, t_header *free_list,
     return (NULL);
   add_block_to_used(&used_list, prev_min, min, size);
   return (min);
+}
+
+/*
+** - This function take the biggest block of memory and take a piece of memory
+** if it's large enougth.
+*/
+void			*worst_fit(t_header *used_list, t_header *free_list,
+				   size_t size)
+{
+  t_header		*it;
+  t_header		*prev;
+  t_header		*max;
+  t_header		*prev_max;
+
+  it = prev = max = prev_max = free_list;
+  while (it)
+    {
+      if (max->size < it->size)
+	{
+	  max = it;
+	  prev_max = prev;
+	}
+      if (it != free_list)
+	prev = prev->next;
+      it = it->next;
+    }
+  if (max->size + sizeof(t_header) >= size)
+    {
+      add_block_to_used(&used_list, prev_max, max, size);
+      return (max);
+    }
+  return (NULL);
 }
 
 void			*malloc(size_t size)
