@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Thu Jan 29 11:54:58 2015 Jean-Baptiste Grégoire
-** Last update Fri Jan 30 19:17:01 2015 Jean-Baptiste Grégoire
+** Last update Sat Jan 31 16:12:03 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -15,21 +15,36 @@
 ** and the free one to the free_list. I'm not sure about the special case
 ** (juste one block on one list, or no blok at all for exemple).
 */
-void			add_block_to_used(t_header **used, t_header *prev,
-					  t_header *current, size_t size)
+void			*add_block_to_used(t_header **used, t_header **free_list,
+					  t_header **prev, size_t size)
 {
   t_header		*new;
   size_t		sub_block_size;
 
-  sub_block_size = current->size - size - sizeof(t_header);
-  new = current;
-  new->size = size;
-  new->next = *used;
-  *used = new;
-  current = new + sizeof(t_header) + size;
-  current->size = sub_block_size;
-  current->next = NULL;
-  prev->next = current;
+  if ((*prev)->next == NULL)
+    {
+      sub_block_size = (*prev)->size - size - sizeof(t_header);
+      new = *prev;
+      new->size = size;
+      new->addr = new + sizeof(t_header);
+      *prev = new->addr + size;
+      (*prev)->size = sub_block_size;
+      new->next = *used;
+      *used = new;
+      *free_list = *prev;
+    }
+  else
+    {
+      sub_block_size = (*prev)->next->size - size - sizeof(t_header);
+      new = (*prev)->next;
+      new->size = size;
+      new->addr = new + sizeof(t_header);
+      (*prev)->next = new->addr + size;
+      (*prev)->next->size = sub_block_size;
+      new->next = *used;
+      *used = new;
+    }
+  return (new);
 }
 
 /*
@@ -38,7 +53,7 @@ void			add_block_to_used(t_header **used, t_header *prev,
 ** - When we call this function we have to be sure that prev->next is not NULL.
 */
 void			switch_block(t_header **used_list, t_header **free_list,
-				     t_header *prev, e_move dest)
+				     t_header *prev, enum e_move dest)
 {
   t_header		*current;
 
@@ -68,17 +83,19 @@ void			*first_fit(t_header *used_list, t_header *free_list, size_t size)
 
   it = free_list;
   prev = it;
+
   while (it)
-    {      
+    {
+      /* printf("size demandé + header = %d ///// free_size = %d\n", size + sizeof(t_header), it->size); */
       if (size + sizeof(t_header) == it->size)
 	{
-	  switch_block(&used_list, &free_list, &prev, TO_USED);
+	  switch_block(&used_list, &free_list, prev, TO_USED);
 	  return (it);
 	}
       else if (size + sizeof(t_header) < it->size)
 	{
-	  add_block_to_used(&used_list, prev, it, size);
-	  return (it);
+	  printf("coucou\n");
+	  return (add_block_to_used(&used_list, &free_list, &prev, size));
 	}
       if (it != free_list)
 	prev = prev->next;
@@ -115,7 +132,8 @@ void			*best_fit(t_header *used_list, t_header *free_list,
     }
   if (min == NULL)
     return (NULL);
-  add_block_to_used(&used_list, prev_min, min, size);
+  add_block_to_used(&used_list, &free_list, &prev_min, size);
+  printf("coucou\n");
   return (min);
 }
 
@@ -145,22 +163,48 @@ void			*worst_fit(t_header *used_list, t_header *free_list,
     }
   if (max->size + sizeof(t_header) >= size)
     {
-      add_block_to_used(&used_list, prev_max, max, size);
+      printf("coucou\n");
+      add_block_to_used(&used_list, &free_list, &prev_max, size);
       return (max);
     }
   return (NULL);
 }
 
-void			*manage_algo(t_header *used, t_header *free, size_t size)
+void			add_new_page(void *addr, t_header **free_list)
+{
+  t_header		*it;
+  t_header		*new;
+
+  it = *free_list;
+  while (it)
+    {
+      printf("adress it = %p et sa size %lu\n", it->addr, it->size);
+      printf("%p %p\n", (void*)(it->addr + it->size), addr);
+      if (it->addr + it->size == addr)
+	{
+	  printf("Heyyyyyyyy\n");
+	  it->size += MALLOC_PAGE_SIZE;
+	  return ;
+	}
+      it = it->next;
+    }
+  new = addr;
+  new->addr = new + sizeof(t_header);
+  new->size = MALLOC_PAGE_SIZE - sizeof(t_header);
+  new->next = *free_list;
+  *free_list = new;
+}
+
+void			*manage_algo(t_header **used, t_header **free, size_t size)
 {
   void			*addr;
   char			algo;
   char			run;
 
-  algo = rand % 3;
   run = 1;
   while (run)
     {
+      algo = 2;//rand() % 3;
       if (algo == WORST_FIT_ALGO)
 	addr = worst_fit(used, free, size);
       else if (algo == BEST_FIT_ALGO)
@@ -171,9 +215,12 @@ void			*manage_algo(t_header *used, t_header *free, size_t size)
 	run = 0;
       else
 	{
-	  if (sbrk(MALLOC_PAGE_SIZE) == (void *)(-1))
+	  if ((addr = sbrk(MALLOC_PAGE_SIZE)) == (void *)(-1))
 	    return (NULL);
+	  add_new_page(addr, &free);
+	  addr = NULL;
 	}
+      /* printf("%p\n", addr); */
     }
   return (addr);
 }
@@ -183,13 +230,24 @@ void			*malloc(size_t size)
   static t_header	*_used = NULL;
   static t_header	*_free = NULL;
 
+  printf("Etat de l'espace disponible :\n");
+
+  t_header *it = _free;
+  while (it)
+    {
+      printf("Il a y %lu octets de dispo à l'adresse %p\n", it->size, it->addr);
+      it = it->next;
+    }
+
+  printf("////////\n");
+
   if (!_free)
     {
       _free = sbrk(MALLOC_PAGE_SIZE + sizeof(t_header));
       _free->addr = _free + sizeof(t_header);
       _free->size = MALLOC_PAGE_SIZE;
       _free->next = NULL;
-      srand(time());
+      srand(time(NULL));
     }
-  return (manage_algo(_used, _free, size));
+  return (manage_algo(&_used, &_free, size));
 }

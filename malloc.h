@@ -5,13 +5,17 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Thu Jan 29 11:59:28 2015 Jean-Baptiste Grégoire
-** Last update Fri Jan 30 18:39:15 2015 Jean-Baptiste Grégoire
+** Last update Sat Jan 31 14:44:26 2015 Jean-Baptiste Grégoire
 */
 
 #ifndef MALLOC_H_
 # define MALLOC_H_
 
 # include <unistd.h>
+# include <stdlib.h>
+# include <time.h>
+
+# include <stdio.h>
 
 # define MALLOC_PAGE_SIZE	getpagesize()
 
