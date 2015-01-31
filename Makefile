@@ -5,7 +5,7 @@
 ## Login   <gregoi_j@epitech.net>
 ## 
 ## Started on  Thu Jan 29 11:23:28 2015 Jean-Baptiste Grégoire
-## Last update Fri Jan 30 20:03:20 2015 Jean-Baptiste Grégoire
+## Last update Sat Jan 31 18:05:57 2015 Jean-Baptiste Grégoire
 ##
 
 SHARED_LIB_NAME	=	libmy_malloc_$(HOSTTYPE).so
@@ -16,7 +16,7 @@ SRC		=	malloc.c
 
 OBJ		=	$(SRC:.c=.o)
 
-CFLAGS		=	-W -Wall -Wextra -fPIC
+CFLAGS		=	-W -Wall -Wextra -fPIC -g3
 
 CC		=	gcc
 
