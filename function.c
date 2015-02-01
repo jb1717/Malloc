@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Sun Feb  1 16:44:56 2015 Jean-Baptiste Grégoire
-** Last update Sun Feb  1 20:14:11 2015 Jean-Baptiste Grégoire
+** Last update Sun Feb  1 21:19:30 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -25,19 +25,22 @@ void		free(void *ptr)
   it = _free;
   while (it)
     {
-      printf("it %p it next %p\n", it, it->next);
+      /* printf("it %p it next %p\n", it, it->next); */
       if ((void *)((size_t)(it->addr) + it->size) == p)
 	{
 	  merge_free_space(&_free, it, p, RIGHT);
+	  /* printf("1 = it %p it next %p\n", it, it->next); */
 	  return ;
 	}
       if ((void *)((size_t)(p->addr) + p->size) == it)
 	{
 	  merge_free_space(&_free, it, p, LEFT);
+	  /* printf("2 = it %p it next %p\n", it, it->next); */
 	  return ;
 	}
       it = it->next;
     }
+  /* printf("toto\n"); */
   list__add(&_free, p);
 }
 
