@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Thu Jan 29 11:59:28 2015 Jean-Baptiste Grégoire
-** Last update Sun Feb  1 19:49:15 2015 Jean-Baptiste Grégoire
+** Last update Sun Feb  1 21:34:46 2015 Jean-Baptiste Grégoire
 */
 
 #ifndef MALLOC_H_
@@ -50,6 +50,7 @@ typedef struct	s_header
 void		free(void *ptr);
 void		*malloc(size_t size);
 void		*realloc(void *ptr, size_t size);
+void		*calloc(size_t nmemb, size_t size);
 
 /* list.c */
 void		list__add(t_header **list, t_header *elem);

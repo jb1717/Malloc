@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Sun Feb  1 16:44:56 2015 Jean-Baptiste Grégoire
-** Last update Sun Feb  1 21:19:30 2015 Jean-Baptiste Grégoire
+** Last update Sun Feb  1 21:34:18 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -90,4 +90,16 @@ void		*malloc(size_t size)
 	}
     }
   return (NULL);
+}
+
+void		*calloc(size_t nmemb, size_t size)
+{
+  void		*ptr;
+
+  if (nmemb == 0 || size == 0)
+    return (NULL);
+  if ((ptr = malloc(nmemb * size)) == NULL)
+    return (NULL);
+  bzero(ptr, nmemb * size);
+  return (ptr);
 }
