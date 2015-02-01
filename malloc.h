@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Thu Jan 29 11:59:28 2015 Jean-Baptiste Grégoire
-** Last update Sat Jan 31 14:44:26 2015 Jean-Baptiste Grégoire
+** Last update Sun Feb  1 14:41:40 2015 Jean-Baptiste Grégoire
 */
 
 #ifndef MALLOC_H_
@@ -40,5 +40,11 @@ typedef struct	s_header
 }		t_header;
 
 void		*malloc(size_t size);
+void		*add_block_to_used(t_header **used, t_header **free_list,
+				   t_header **prev, size_t size);
+void		switch_block(t_header **used_list, t_header **free_list,
+			     t_header *perv, enum e_move dest);
+void		add_new_page(void *addr, t_header **free_list);
+void		delete_from_used(t_header **used_list, t_header *prev);
 
 #endif /* !MALLOC_H_ */
