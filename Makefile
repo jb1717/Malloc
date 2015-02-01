@@ -5,15 +5,17 @@
 ## Login   <gregoi_j@epitech.net>
 ## 
 ## Started on  Thu Jan 29 11:23:28 2015 Jean-Baptiste Grégoire
-## Last update Sun Feb  1 13:01:21 2015 Jean-Baptiste Grégoire
+## Last update Sun Feb  1 19:43:48 2015 Jean-Baptiste Grégoire
 ##
 
 SHARED_LIB_NAME	=	libmy_malloc_$(HOSTTYPE).so
 
 LIB_NAME	=	libmy_malloc.so
 
-SRC		=	malloc_lib.c	\
-			malloc_func.c
+SRC		=	function.c	\
+			algorithm.c	\
+			list.c		\
+			utils.c
 
 OBJ		=	$(SRC:.c=.o)
 
