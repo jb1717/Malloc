@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Sun Feb  1 16:50:37 2015 Jean-Baptiste Grégoire
-** Last update Sun Feb  1 20:12:20 2015 Jean-Baptiste Grégoire
+** Last update Mon Feb  2 21:31:05 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -65,6 +65,7 @@ void		merge_free_space(t_header **free_list, t_header *block1,
     {
       // le block2 (à free) est à droite du block1 (celui dans la liste free)
       block1->size = block1->size + block2->size + sizeof(t_header);
+      list__delete(free_list, block2);
     }
   if (side == LEFT)
     {

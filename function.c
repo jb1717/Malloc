@@ -5,39 +5,43 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Sun Feb  1 16:44:56 2015 Jean-Baptiste Grégoire
-** Last update Mon Feb  2 10:20:51 2015 Jean-Baptiste Grégoire
+** Last update Mon Feb  2 21:32:38 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
 
-static t_header *_used = NULL;
-static t_header *_free = NULL;
+static t_header *g_used = NULL;
+static t_header *g_free = NULL;
 
 void		free(void *ptr)
 {
   t_header	*p;
   t_header	*it;
+  char		is_free;
 
   if (!ptr)
     return ;
+  is_free = 0;
   p = (void *)((size_t)(ptr) - sizeof(t_header));
-  list__delete(&_used, p);
-  it = _free;
+  list__delete(&g_used, p);
+  it = g_free;
   while (it)
     {
       if ((void *)((size_t)(it->addr) + it->size) == p)
 	{
-	  merge_free_space(&_free, it, p, RIGHT);
-	  return ;
+	  merge_free_space(&g_free, it, p, RIGHT);
+	  is_free = 1;
 	}
       if ((void *)((size_t)(p->addr) + p->size) == it)
 	{
-	  merge_free_space(&_free, it, p, LEFT);
-	  return ;
+	  merge_free_space(&g_free, it, p, LEFT);
+	  it = p;
+	  is_free = 1;
 	}
       it = it->next;
     }
-  list__add(&_free, p);
+  if (!is_free)
+    list__add(&g_free, p);
 }
 
 void		*realloc(void *ptr, size_t size)
@@ -58,12 +62,12 @@ void		*realloc(void *ptr, size_t size)
       new_free->size = p->size - size - sizeof(t_header);
       new_free->addr = (void *)((size_t)(new_free) + sizeof(t_header));
       new_free->next = NULL;
-      list__add(&_free, new_free);
+      list__add(&g_free, new_free);
       p->size = size;
       return (ptr);
     }
   else
-    return (move_memory(&_used, p, size));
+    return (move_memory(&g_used, p, size));
 }
 
 void		*malloc(size_t size)
@@ -71,17 +75,17 @@ void		*malloc(size_t size)
   char		good;
   t_header	*block;
 
-  if (!_free)
-    malloc_init(&_free);
+  if (!g_free)
+    malloc_init(&g_free);
   good = 1;
   while (good)
     {
-      block = first_fit(&_used, &_free, size);
+      block = first_fit(&g_used, &g_free, size);
       if (block)
 	return (block->addr);
       else
 	{
-	  if (add_new_page(&_free) == -1)
+	  if (add_new_page(&g_free) == -1)
 	    good = 0;
 	}
     }
@@ -98,4 +102,18 @@ void		*calloc(size_t nmemb, size_t size)
     return (NULL);
   bzero(ptr, nmemb * size);
   return (ptr);
+}
+
+void		show_alloc_mem()
+{
+  t_header	*it;
+
+  it = g_used;
+  printf("break : %p\n", sbrk(0));
+  while (it)
+    {
+      printf("%p - %p : %lu octets\n", it->addr,
+	     (void *)((size_t)(it->addr) + it->size), it->size);
+      it = it->next;
+    }
 }

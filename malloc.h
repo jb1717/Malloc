@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Thu Jan 29 11:59:28 2015 Jean-Baptiste Grégoire
-** Last update Sun Feb  1 21:34:46 2015 Jean-Baptiste Grégoire
+** Last update Mon Feb  2 16:39:34 2015 Jean-Baptiste Grégoire
 */
 
 #ifndef MALLOC_H_
@@ -51,6 +51,7 @@ void		free(void *ptr);
 void		*malloc(size_t size);
 void		*realloc(void *ptr, size_t size);
 void		*calloc(size_t nmemb, size_t size);
+void		show_alloc_mem();
 
 /* list.c */
 void		list__add(t_header **list, t_header *elem);

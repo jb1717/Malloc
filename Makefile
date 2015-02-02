@@ -5,7 +5,7 @@
 ## Login   <gregoi_j@epitech.net>
 ## 
 ## Started on  Thu Jan 29 11:23:28 2015 Jean-Baptiste Grégoire
-## Last update Mon Feb  2 10:23:18 2015 Jean-Baptiste Grégoire
+## Last update Mon Feb  2 16:45:34 2015 Jean-Baptiste Grégoire
 ##
 
 DEBUG		= yes
@@ -35,7 +35,6 @@ endif
 
 $(SHARED_LIB_NAME):	$(OBJ)
 		$(CC) -shared -o $(SHARED_LIB_NAME) $(OBJ)
-		export LD_PRELOAD=$(PWD)
 # ln -s $(SHARED_LIB_NAME) $(LIB_NAME)
 
 all:		$(SHARED_LIB_NAME)
