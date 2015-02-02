@@ -5,7 +5,7 @@
 ## Login   <gregoi_j@epitech.net>
 ## 
 ## Started on  Thu Jan 29 11:23:28 2015 Jean-Baptiste Grégoire
-## Last update Sun Feb  1 19:43:48 2015 Jean-Baptiste Grégoire
+## Last update Mon Feb  2 10:23:18 2015 Jean-Baptiste Grégoire
 ##
 
 SHARED_LIB_NAME	=	libmy_malloc_$(HOSTTYPE).so
@@ -28,7 +28,7 @@ RM		=	rm -f
 $(SHARED_LIB_NAME):	$(OBJ)
 		$(CC) -shared -o $(SHARED_LIB_NAME) $(OBJ)
 		export LD_PRELOAD=$(PWD)
-		# ln -s $(SHARED_LIB_NAME) $(LIB_NAME)
+# ln -s $(SHARED_LIB_NAME) $(LIB_NAME)
 
 all:		$(SHARED_LIB_NAME)
 
