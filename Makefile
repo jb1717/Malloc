@@ -10,22 +10,26 @@
 
 DEBUG		= yes
 
-SHARED_LIB_NAME	=	libmy_malloc_$(HOSTTYPE).so
+SHARED_LIB_NAME	= libmy_malloc_$(HOSTTYPE).so
 
-LIB_NAME	=	libmy_malloc.so
+LIB_NAME	= libmy_malloc.so
 
-SRC		=	function.c	\
-			algorithm.c	\
-			list.c		\
-			utils.c
+SRC		= src/function.c	\
+		  src/algorithm.c	\
+		  src/list.c		\
+		  src/utils.c
 
-OBJ		=	$(SRC:.c=.o)
+OBJ		= $(SRC:.c=.o)
 
-RM		=	rm -f
+RM		= rm -f
 
-CC		=	gcc
+CC		= gcc
 
-CFLAGS		=	-W -Wall -Wextra -fPIC
+INCLUDE 	= includes/
+
+CFLAGS		= -W -Wall -Wextra -fPIC  -I $(INCLUDE)
+
+LIB		= -pthread
 
 ifeq ($(DEBUG),yes)
 	CFLAGS 	+= -g3
@@ -34,8 +38,8 @@ else
 endif
 
 $(SHARED_LIB_NAME):	$(OBJ)
-		$(CC) -shared -o $(SHARED_LIB_NAME) $(OBJ)
-		export LD_PRELOAD=$(PWD)
+		$(CC) -shared -o $(SHARED_LIB_NAME) $(OBJ) $(LIB)
+		export LD_PRELOAD=$(SHARED_LID_NAME)
 		# ln -s $(SHARED_LIB_NAME) $(LIB_NAME)
 
 all:		$(SHARED_LIB_NAME)

@@ -8,10 +8,12 @@
 ** Last update Mon Feb  2 10:20:51 2015 Jean-Baptiste Grégoire
 */
 
+#include <pthread.h>
 #include "malloc.h"
 
-static t_header *_used = NULL;
-static t_header *_free = NULL;
+static t_header		*_used = NULL;
+static t_header		*_free = NULL;
+static pthread_mutex_t	g_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void		free(void *ptr)
 {
@@ -71,6 +73,7 @@ void		*malloc(size_t size)
   char		good;
   t_header	*block;
 
+  pthread_mutex_lock(&g_mutex);
   if (!_free)
     malloc_init(&_free);
   good = 1;
@@ -78,13 +81,17 @@ void		*malloc(size_t size)
     {
       block = first_fit(&_used, &_free, size);
       if (block)
-	return (block->addr);
+	{
+	  pthread_mutex_unlock(&g_mutex);
+	  return (block->addr);
+	}
       else
 	{
 	  if (add_new_page(&_free) == -1)
 	    good = 0;
 	}
     }
+  pthread_mutex_unlock(&g_mutex);
   return (NULL);
 }
 
