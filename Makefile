@@ -19,11 +19,17 @@ SRC		=	function.c	\
 
 OBJ		=	$(SRC:.c=.o)
 
-CFLAGS		=	-W -Wall -Wextra -fPIC -g3
+RM		=	rm -f
 
 CC		=	gcc
 
-RM		=	rm -f
+CFLAGS		=	-W -Wall -Wextra -fPIC -g3
+
+ifeq ($(DEBUG),yes)
+	CFLAGS 	+= -g3
+else
+	CFLAGS	+= -O2
+endif
 
 $(SHARED_LIB_NAME):	$(OBJ)
 		$(CC) -shared -o $(SHARED_LIB_NAME) $(OBJ)
