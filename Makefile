@@ -25,7 +25,7 @@ RM		=	rm -f
 
 CC		=	gcc
 
-CFLAGS		=	-W -Wall -Wextra -fPIC -g3
+CFLAGS		=	-W -Wall -Wextra -fPIC
 
 ifeq ($(DEBUG),yes)
 	CFLAGS 	+= -g3
