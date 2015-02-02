@@ -8,6 +8,8 @@
 ## Last update Sun Feb  1 19:43:48 2015 Jean-Baptiste Grégoire
 ##
 
+DEBUG		= yes
+
 SHARED_LIB_NAME	=	libmy_malloc_$(HOSTTYPE).so
 
 LIB_NAME	=	libmy_malloc.so
