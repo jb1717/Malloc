@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Sun Feb  1 16:50:37 2015 Jean-Baptiste Grégoire
-** Last update Mon Feb  2 21:31:05 2015 Jean-Baptiste Grégoire
+** Last update Mon Feb  2 22:18:21 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -54,6 +54,10 @@ void		*move_memory(t_header **used_list, t_header *block, size_t size)
   memcpy(new, block->addr, MIN(size, block->size));
   free(block->addr);
   new_p = (void *)((size_t)(new) - sizeof(t_header));
+  new_p->size = size;
+  new_p->addr = new;
+  new_p->next = NULL;
+  printf("%p %p\n", *used_list, new_p); 
   list__add(used_list, new_p);
   return (new);
 }
