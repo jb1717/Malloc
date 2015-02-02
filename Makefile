@@ -8,6 +8,8 @@
 ## Last update Mon Feb  2 10:23:18 2015 Jean-Baptiste Grégoire
 ##
 
+DEBUG		= yes
+
 SHARED_LIB_NAME	=	libmy_malloc_$(HOSTTYPE).so
 
 LIB_NAME	=	libmy_malloc.so
@@ -19,11 +21,17 @@ SRC		=	function.c	\
 
 OBJ		=	$(SRC:.c=.o)
 
-CFLAGS		=	-W -Wall -Wextra -fPIC -g3
+RM		=	rm -f
 
 CC		=	gcc
 
-RM		=	rm -f
+CFLAGS		=	-W -Wall -Wextra -fPIC
+
+ifeq ($(DEBUG),yes)
+	CFLAGS 	+= -g3
+else
+	CFLAGS	+= -O2
+endif
 
 $(SHARED_LIB_NAME):	$(OBJ)
 		$(CC) -shared -o $(SHARED_LIB_NAME) $(OBJ)
