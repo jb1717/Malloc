@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Sun Feb  1 16:50:37 2015 Jean-Baptiste Grégoire
-** Last update Mon Feb  2 22:18:21 2015 Jean-Baptiste Grégoire
+** Last update Tue Feb  3 11:21:36 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -44,21 +44,14 @@ int		add_new_page(t_header **free_list)
   return (0);
 }
 
-void		*move_memory(t_header **used_list, t_header *block, size_t size)
+void		*move_memory(t_header *block, size_t size)
 {
   void		*new;
-  t_header	*new_p;
 
   if ((new = malloc(size)) == NULL)
     return (NULL);
   memcpy(new, block->addr, MIN(size, block->size));
   free(block->addr);
-  new_p = (void *)((size_t)(new) - sizeof(t_header));
-  new_p->size = size;
-  new_p->addr = new;
-  new_p->next = NULL;
-  printf("%p %p\n", *used_list, new_p); 
-  list__add(used_list, new_p);
   return (new);
 }
 
