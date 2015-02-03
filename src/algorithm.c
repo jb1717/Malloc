@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Sun Feb  1 16:12:39 2015 Jean-Baptiste Grégoire
-** Last update Mon Feb  2 21:09:51 2015 Jean-Baptiste Grégoire
+** Last update Mon Feb  2 22:58:19 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -35,7 +35,6 @@ t_header	*first_fit(t_header **used_list, t_header **free_list,
 	  return (new);
 	}
       it = it->next;
-      printf("loop0\n");
     }
   return (NULL);
 }

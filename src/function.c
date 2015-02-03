@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Sun Feb  1 16:44:56 2015 Jean-Baptiste Grégoire
-** Last update Mon Feb  2 21:32:38 2015 Jean-Baptiste Grégoire
+** Last update Tue Feb  3 11:25:11 2015 Jean-Baptiste Grégoire
 */
 
 #include <pthread.h>
@@ -69,7 +69,7 @@ void		*realloc(void *ptr, size_t size)
       return (ptr);
     }
   else
-    return (move_memory(&g_used, p, size));
+    return (move_memory(p, size));
 }
 
 void		*malloc(size_t size)
@@ -117,7 +117,7 @@ void		show_alloc_mem()
 {
   t_header	*it;
 
-  it = g_used;
+  it = g_free;
   printf("break : %p\n", sbrk(0));
   while (it)
     {
