@@ -25,20 +25,20 @@ int		add_new_page(t_header **free_list)
   t_header	*new_page;
   t_header	*it;
 
-  if ((new_page = sbrk(MALLOC_PAGE_SIZE + sizeof(t_header))) == (void *)(-1))
+  if ((new_page = sbrk(20 * MALLOC_PAGE_SIZE + sizeof(t_header))) == (void *)(-1))
     RAISE_ERROR("add_new_page");
   it = *free_list;
   while (it)
     {
       if ((void *)((size_t)(it->addr) + it->size) == new_page)
 	{
-	  it->size = it->size + MALLOC_PAGE_SIZE + sizeof(t_header);
+	  it->size = it->size + (20 * MALLOC_PAGE_SIZE) + sizeof(t_header);
 	  return (0);
 	}
       it = it->next;
     }
   new_page->addr = (void *)((size_t)(new_page) + sizeof(t_header));
-  new_page->size = MALLOC_PAGE_SIZE;
+  new_page->size = 20 * MALLOC_PAGE_SIZE;
   new_page->next = NULL;
   list__add(free_list, new_page);
   return (0);

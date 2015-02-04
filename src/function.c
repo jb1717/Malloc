@@ -8,12 +8,12 @@
 ** Last update Tue Feb  3 11:25:11 2015 Jean-Baptiste Grégoire
 */
 
-#include <pthread.h>
 #include "malloc.h"
 
 static t_header		*g_used = NULL;
 static t_header		*g_free = NULL;
 static pthread_mutex_t	g_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t	g_mutex_r = PTHREAD_MUTEX_INITIALIZER;
 
 void		free(void *ptr)
 {
@@ -21,8 +21,12 @@ void		free(void *ptr)
   t_header	*it;
   char		is_free;
 
+  pthread_mutex_lock(&g_mutex);
   if (!ptr)
-    return ;
+    {
+      pthread_mutex_unlock(&g_mutex);
+      return ;
+    }
   is_free = 0;
   p = (void *)((size_t)(ptr) - sizeof(t_header));
   list__delete(&g_used, p);
@@ -30,20 +34,21 @@ void		free(void *ptr)
   while (it)
     {
       if ((void *)((size_t)(it->addr) + it->size) == p)
-	{
-	  merge_free_space(&g_free, it, p, RIGHT);
-	  is_free = 1;
-	}
-      if ((void *)((size_t)(p->addr) + p->size) == it)
-	{
-	  merge_free_space(&g_free, it, p, LEFT);
-	  it = p;
-	  is_free = 1;
-	}
+      	{
+      	  merge_free_space(&g_free, it, p, RIGHT);
+      	  is_free = 1;
+      	}
+      /* if ((void *)((size_t)(p->addr) + p->size) == it) */
+      /* 	{ */
+      /* 	  merge_free_space(&g_free, it, p, LEFT); */
+      /* 	  it = p; */
+      /* 	  is_free = 1; */
+      /* 	} */
       it = it->next;
     }
   if (!is_free)
     list__add(&g_free, p);
+  pthread_mutex_unlock(&g_mutex);
 }
 
 void		*realloc(void *ptr, size_t size)
@@ -54,10 +59,17 @@ void		*realloc(void *ptr, size_t size)
   if (!ptr)
     return (malloc(size));
   if (size == 0)
-    free(ptr);
+    {
+      free(ptr);
+      return (NULL);
+    }
+  pthread_mutex_lock(&g_mutex_r);
   p = (void *)((size_t)(ptr) - sizeof(t_header));
   if (p->size == size)
-    return (ptr);
+    {
+      pthread_mutex_unlock(&g_mutex_r);
+      return (ptr);
+    }
   else if ((p->size > size) && (p->size - size > sizeof(t_header)))
     {
       new_free = ((void *)(size_t)(p->addr) + size);
@@ -66,10 +78,11 @@ void		*realloc(void *ptr, size_t size)
       new_free->next = NULL;
       list__add(&g_free, new_free);
       p->size = size;
+      pthread_mutex_unlock(&g_mutex_r);
       return (ptr);
     }
-  else
-    return (move_memory(p, size));
+  pthread_mutex_unlock(&g_mutex_r);
+  return (move_memory(p, size));
 }
 
 void		*malloc(size_t size)
@@ -77,8 +90,12 @@ void		*malloc(size_t size)
   char		good;
   t_header	*block;
 
-  if (size < 1)
-    return (NULL);
+  //  printf("%ld\n", (int64_t)size);
+  if ((int64_t)size < 0)
+    {
+      errno = ENOMEM;
+      return (NULL);
+    }
   pthread_mutex_lock(&g_mutex);
   if (!g_free)
     malloc_init(&g_free);
@@ -91,11 +108,8 @@ void		*malloc(size_t size)
 	  pthread_mutex_unlock(&g_mutex);
 	  return (block->addr);
 	}
-      else
-	{
-	  if (add_new_page(&g_free) == -1)
-	    good = 0;
-	}
+      else if (add_new_page(&g_free) == -1)
+	good = 0;
     }
   pthread_mutex_unlock(&g_mutex);
   return (NULL);

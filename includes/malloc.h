@@ -15,6 +15,9 @@
 # include <stdlib.h>
 # include <time.h>
 # include <string.h>
+# include <stdint.h>
+# include <pthread.h>
+# include <errno.h>
 
 # include <stdio.h>
 
