@@ -43,11 +43,14 @@ enum		e_algo
     FIRST_FIT_ALGO
   };
 
+typedef struct	s_header t_header;
+
 typedef struct	s_header
 {
+  
   size_t	size;
   void		*addr;
-  struct s_header *next;
+  t_header	*next;
 }		t_header;
 
 void		free(void *ptr);
