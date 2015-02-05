@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Sun Feb  1 16:44:56 2015 Jean-Baptiste Grégoire
-** Last update Thu Feb  5 16:43:44 2015 Jean-Baptiste Grégoire
+** Last update Thu Feb  5 22:46:22 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -113,6 +113,7 @@ void		*malloc(size_t size)
       else if (add_new_page(&g_free) == -1)
 	good = 0;
     }
+  pthread_mutex_unlock(&g_mutex);
   return (NULL);
 }
 
