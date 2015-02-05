@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Sun Feb  1 16:44:56 2015 Jean-Baptiste Grégoire
-** Last update Tue Feb  3 11:25:11 2015 Jean-Baptiste Grégoire
+** Last update Thu Feb  5 13:13:32 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -28,16 +28,17 @@ void		free(void *ptr)
   while (it)
     {
       if ((void *)((size_t)(it->addr) + it->size) == p)
-	{
-	  merge_free_space(&g_free, it, p, RIGHT);
-	  is_free = 1;
-	}
+      	{
+      	  merge_free_space(&g_free, it, p, RIGHT);
+      	  is_free = 1;
+	  p = it;
+      	}
       if ((void *)((size_t)(p->addr) + p->size) == it)
-	{
-	  merge_free_space(&g_free, it, p, LEFT);
-	  it = p;
-	  is_free = 1;
-	}
+      	{
+      	  merge_free_space(&g_free, it, p, LEFT);
+      	  it = p;
+      	  is_free = 1;
+      	}
       it = it->next;
     }
   if (!is_free)
@@ -75,6 +76,11 @@ void		*malloc(size_t size)
   char		good;
   t_header	*block;
 
+  if ((int64_t)(size) < 0)
+    {
+      errno = ENOMEM;
+      return (NULL);
+    }
   if (!g_free)
     malloc_init(&g_free);
   good = 1;
@@ -108,7 +114,7 @@ void		show_alloc_mem()
 {
   t_header	*it;
 
-  it = g_free;
+  it = g_used;
   printf("break : %p\n", sbrk(0));
   while (it)
     {

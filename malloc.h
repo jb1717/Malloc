@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Thu Jan 29 11:59:28 2015 Jean-Baptiste Grégoire
-** Last update Tue Feb  3 11:25:31 2015 Jean-Baptiste Grégoire
+** Last update Thu Feb  5 13:13:44 2015 Jean-Baptiste Grégoire
 */
 
 #ifndef MALLOC_H_
@@ -15,6 +15,7 @@
 # include <stdlib.h>
 # include <time.h>
 # include <string.h>
+# include <errno.h>
 
 # include <stdio.h>
 

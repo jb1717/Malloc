@@ -5,35 +5,35 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Sun Feb  1 15:27:08 2015 Jean-Baptiste Grégoire
-** Last update Mon Feb  2 21:31:44 2015 Jean-Baptiste Grégoire
+** Last update Thu Feb  5 13:01:52 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
 
 void		list__add(t_header **list, t_header *elem)
 {
-  /* t_header	*it; */
-  /* t_header	*save; */
-  /* char		stop; */
+  t_header	*it;
+  t_header	*save;
+  char		stop;
 
-  /* if (*list == NULL) */
-  /*   { */
-  elem->next = *list;
-  *list = elem;
-  /*     return ; */
-  /*   } */
-  /* stop = 1; */
-  /* it = *list; */
-  /* while (it && stop) */
-  /*   { */
-  /*     if (it->next && it->next->addr < elem->addr) */
-  /* 	it = it->next; */
-  /*     else */
-  /* 	stop = 0; */
-  /*   } */
-  /* save = it->next; */
-  /* it->next = elem; */
-  /* elem->next = save; */
+  if (*list == NULL)
+    {
+      elem->next = *list;
+      *list = elem;
+      return ;
+    }
+  stop = 1;
+  it = *list;
+  while (it && stop)
+    {
+      if (it->next && it->next->addr < elem->addr)
+  	it = it->next;
+      else
+  	stop = 0;
+    }
+  save = it->next;
+  it->next = elem;
+  elem->next = save;
 }
 
 void		list__delete(t_header **list, t_header *elem)
@@ -45,7 +45,6 @@ void		list__delete(t_header **list, t_header *elem)
     return ;
   it = *list;
   prev = it;
-  /* show_alloc_mem(); */
   while (it)
     {
       if (it == elem)
