@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Thu Jan 29 11:59:28 2015 Jean-Baptiste Grégoire
-** Last update Thu Feb  5 13:13:44 2015 Jean-Baptiste Grégoire
+** Last update Thu Feb  5 16:44:36 2015 Jean-Baptiste Grégoire
 */
 
 #ifndef MALLOC_H_
@@ -23,6 +23,11 @@
 
 # define MIN(a, b)		((a) < (b) ? (a) : (b))
 # define MALLOC_PAGE_SIZE	getpagesize()
+# if __x86_64__
+#  define REG_SIZE		8
+# else
+#  define REG_SIZE		4
+# endif
 # define RAISE_ERROR(where)	\
 do				\
 {				\
@@ -46,8 +51,7 @@ enum		e_algo
 typedef struct	s_header t_header;
 
 typedef struct	s_header
-{
-  
+{  
   size_t	size;
   void		*addr;
   t_header	*next;

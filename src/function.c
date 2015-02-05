@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Sun Feb  1 16:44:56 2015 Jean-Baptiste Grégoire
-** Last update Thu Feb  5 13:13:32 2015 Jean-Baptiste Grégoire
+** Last update Thu Feb  5 16:43:44 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -96,6 +96,8 @@ void		*malloc(size_t size)
       errno = ENOMEM;
       return (NULL);
     }
+  if (size % REG_SIZE != 0)
+    size += REG_SIZE - (size % REG_SIZE);
   pthread_mutex_lock(&g_mutex);
   if (!g_free)
     malloc_init(&g_free);
