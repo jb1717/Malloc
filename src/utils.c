@@ -55,21 +55,3 @@ void		*move_memory(t_header *block, size_t size)
   return (new);
 }
 
-void		merge_free_space(t_header **free_list, t_header *block1,
-				 t_header *block2, enum e_move side)
-{
-  if (side == RIGHT)
-    {
-      // le block2 (à free) est à droite du block1 (celui dans la liste free)
-      block1->size = block1->size + block2->size + sizeof(t_header);
-      /* list__delete(free_list, block2); */
-    }
-  if (side == LEFT)
-    {
-      // le block2 (à free) est à gauche du block1 (celui dans la liste free)
-      list__delete(free_list, block1);
-      block2->size = block2->size + block1->size + sizeof(t_header);
-      list__delete(free_list, block2);
-      list__add(free_list, block2);
-    }
-}

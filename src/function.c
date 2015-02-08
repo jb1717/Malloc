@@ -10,81 +10,9 @@
 
 #include "malloc.h"
 
-static t_header		*g_used = NULL;
-static t_header		*g_free = NULL;
-static pthread_mutex_t	g_mutex = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t	g_mutex_r = PTHREAD_MUTEX_INITIALIZER;
-
-void		free(void *ptr)
-{
-  t_header	*p;
-  t_header	*it;
-  char		is_free;
-
-  pthread_mutex_lock(&g_mutex);
-  if (!ptr)
-    {
-      pthread_mutex_unlock(&g_mutex);
-      return ;
-    }
-  is_free = 0;
-  p = (void *)((size_t)(ptr) - sizeof(t_header));
-  list__delete(&g_used, p);
-  it = g_free;
-  while (it)
-    {
-      if ((void *)((size_t)(it->addr) + it->size) == p)
-      	{
-      	  merge_free_space(&g_free, it, p, RIGHT);
-      	  is_free = 1;
-	  p = it;
-      	}
-      if ((void *)((size_t)(p->addr) + p->size) == it)
-      	{
-      	  merge_free_space(&g_free, it, p, LEFT);
-      	  it = p;
-      	  is_free = 1;
-      	}
-      it = it->next;
-    }
-  if (!is_free)
-    list__add(&g_free, p);
-  pthread_mutex_unlock(&g_mutex);
-}
-
-void		*realloc(void *ptr, size_t size)
-{
-  t_header	*p;
-  t_header	*new_free;
-
-  if (!ptr)
-    return (malloc(size));
-  if (size == 0)
-    {
-      free(ptr);
-      return (NULL);
-    }
-  pthread_mutex_lock(&g_mutex_r);
-  p = (void *)((size_t)(ptr) - sizeof(t_header));
-  if (p->size == size)
-    {
-      pthread_mutex_unlock(&g_mutex_r);
-      return (ptr);
-    }
-  else if ((p->size > size) && (p->size - size > sizeof(t_header)))
-    {
-      new_free = ((void *)(size_t)(p->addr) + size);
-      new_free->size = p->size - size - sizeof(t_header);
-      new_free->addr = (void *)((size_t)(new_free) + sizeof(t_header));
-      new_free->next = NULL;
-      list__add(&g_free, new_free);
-      p->size = size;
-      pthread_mutex_unlock(&g_mutex_r);
-      return (ptr);
-    }
-  pthread_mutex_unlock(&g_mutex_r);
-  return (move_memory(p, size));
-}
+t_header	*g_used = NULL;
+t_header	*g_free = NULL;
+pthread_mutex_t	g_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void		*malloc(size_t size)
 {

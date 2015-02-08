@@ -17,6 +17,8 @@ LIB_NAME	=	libmy_malloc.so
 SRC		=	src/function.c	\
 			src/algorithm.c	\
 			src/list.c	\
+			src/free.c	\
+			src/realloc.c	\
 			src/utils.c
 
 OBJ		=	$(SRC:.c=.o)
@@ -32,7 +34,7 @@ CFLAGS		=	-W -Wall -Wextra -fPIC -I $(INCLUDES)
 ifeq ($(DEBUG),yes)
 	CFLAGS 	+= -g3
 else
-	CFLAGS	+= -O2
+	CFLAGS	+= -O3
 endif
 
 $(SHARED_LIB_NAME):	$(OBJ)
