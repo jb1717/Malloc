@@ -14,6 +14,15 @@ t_header	*g_used = NULL;
 t_header	*g_free_list = NULL;
 pthread_mutex_t	g_mutex = PTHREAD_MUTEX_INITIALIZER;
 
+void	init_value_malloc(size_t *size)
+{
+  if (*size % REG_SIZE != 0)
+    *size += REG_SIZE - (*size % REG_SIZE);
+  pthread_mutex_lock(&g_mutex);
+  if (!g_free_list)
+    malloc_init(&g_free_list);
+}
+
 void		*malloc(size_t size)
 {
   char		good;
@@ -24,11 +33,7 @@ void		*malloc(size_t size)
       errno = ENOMEM;
       return (NULL);
     }
-  if (size % REG_SIZE != 0)
-    size += REG_SIZE - (size % REG_SIZE);
-  pthread_mutex_lock(&g_mutex);
-  if (!g_free_list)
-    malloc_init(&g_free_list);
+  init_value_malloc(&size);
   good = 1;
   while (good)
     {
