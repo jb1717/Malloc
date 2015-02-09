@@ -1,16 +1,16 @@
 /*
 ** free.c for malloc in /home/patoche/rendu/PSU_2014_malloc/src
-** 
+**
 ** Made by Hugo Prenat
 ** Login   <prenat_h@epitech.net>
-** 
+**
 ** Started on  Tue Feb  3 23:01:20 2015 Hugo Prenat
-** Last update Mon Feb  9 13:39:53 2015 Jean-Baptiste Grégoire
+** Last update Mon Feb  9 23:48:10 2015 Hugo Prenat
 */
 
 #include "malloc.h"
 
-extern t_header	*g_free_list;	
+extern t_header	*g_free_list;
 pthread_mutex_t	g_mutex_r = PTHREAD_MUTEX_INITIALIZER;
 
 void		resize(t_header *p, size_t size)
@@ -52,4 +52,3 @@ void		*realloc(void *ptr, size_t size)
   pthread_mutex_unlock(&g_mutex_r);
   return (move_memory(p, size));
 }
-
