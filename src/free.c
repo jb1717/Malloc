@@ -59,7 +59,6 @@ void		free(void *ptr)
 {
   t_header	*p;
 
-  printf("FREE\n");
   pthread_mutex_lock(&g_mutex);
   if (!ptr)
     {

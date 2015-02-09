@@ -29,7 +29,6 @@ void		*realloc(void *ptr, size_t size)
 {
   t_header	*p;
 
-  printf("REALLOC\n");
   if (!ptr)
     return (malloc(size));
   if (size == 0)
