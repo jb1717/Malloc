@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Thu Jan 29 11:59:28 2015 Jean-Baptiste Grégoire
-** Last update Mon Feb  9 13:47:29 2015 Jean-Baptiste Grégoire
+** Last update Mon Feb  9 22:31:03 2015 Jean-Baptiste Grégoire
 */
 
 #ifndef MALLOC_H_
@@ -13,7 +13,6 @@
 
 # include <unistd.h>
 # include <stdlib.h>
-# include <time.h>
 # include <string.h>
 # include <stdint.h>
 # include <pthread.h>
@@ -33,13 +32,6 @@ enum		e_move
   {
     RIGHT = 0,
     LEFT
-  };
-
-enum		e_algo
-  {
-    WORST_FIT_ALGO = 0,
-    BEST_FIT_ALGO,
-    FIRST_FIT_ALGO
   };
 
 typedef struct	s_header t_header;
@@ -63,6 +55,8 @@ void		list__delete(t_header **list, t_header *elem);
 
 /* algorithm.c */
 t_header	*first_fit(t_header **used_list, t_header **free_list,
+			   size_t size);
+t_header	*best_fit(t_header **used_list, t_header **free_list,
 			   size_t size);
 
 /* utils.c */
