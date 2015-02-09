@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Sun Feb  1 16:50:37 2015 Jean-Baptiste Grégoire
-** Last update Thu Feb  5 12:59:44 2015 Jean-Baptiste Grégoire
+** Last update Mon Feb  9 13:48:17 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -13,7 +13,10 @@
 int		malloc_init(t_header **free_list)
 {
   if ((*free_list = sbrk(MALLOC_PAGE_SIZE + sizeof(t_header))) == (void *)(-1))
-    RAISE_ERROR("malloc_init");
+    {
+      perror("malloc_init");
+      return (-1);
+    }
   (*free_list)->size = MALLOC_PAGE_SIZE;
   (*free_list)->addr = (void *)((size_t)(*free_list) + sizeof(t_header));
   (*free_list)->next = NULL;
@@ -26,7 +29,10 @@ int		add_new_page(t_header **free_list)
   t_header	*it;
 
   if ((new_page = sbrk(20 * MALLOC_PAGE_SIZE + sizeof(t_header))) == (void *)(-1))
-    RAISE_ERROR("add_new_page");
+    {
+      perror("add_new_page");
+      return (-1);
+    }
   it = *free_list;
   while (it)
     {
