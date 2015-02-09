@@ -11,7 +11,7 @@
 #include "malloc.h"
 
 extern t_header		*g_used;
-extern t_header		*g_free;	
+extern t_header		*g_free_list;	
 extern pthread_mutex_t	g_mutex;
 
 void		merge_free_space(t_header **free_list, t_header *block1,
@@ -34,25 +34,25 @@ void		free_link(t_header *p)
   char		is_free;
 
   is_free = 0;
-  it = g_free;
+  it = g_free_list;
   while (it)
     {
       if ((void *)((size_t)(it->addr) + it->size) == p)
       	{
-      	  merge_free_space(&g_free, it, p, RIGHT);
+      	  merge_free_space(&g_free_list, it, p, RIGHT);
       	  is_free = 1;
 	  p = it;
       	}
       if ((void *)((size_t)(p->addr) + p->size) == it)
       	{
-      	  merge_free_space(&g_free, it, p, LEFT);
+      	  merge_free_space(&g_free_list, it, p, LEFT);
       	  it = p;
       	  is_free = 1;
       	}
       it = it->next;
     }
   if (!is_free)
-    list__add(&g_free, p);
+    list__add(&g_free_list, p);
 }
 
 void		free(void *ptr)

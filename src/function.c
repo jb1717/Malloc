@@ -11,7 +11,7 @@
 #include "malloc.h"
 
 t_header	*g_used = NULL;
-t_header	*g_free = NULL;
+t_header	*g_free_list = NULL;
 pthread_mutex_t	g_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void		*malloc(size_t size)
@@ -27,18 +27,18 @@ void		*malloc(size_t size)
   if (size % REG_SIZE != 0)
     size += REG_SIZE - (size % REG_SIZE);
   pthread_mutex_lock(&g_mutex);
-  if (!g_free)
-    malloc_init(&g_free);
+  if (!g_free_list)
+    malloc_init(&g_free_list);
   good = 1;
   while (good)
     {
-      block = first_fit(&g_used, &g_free, size);
+      block = first_fit(&g_used, &g_free_list, size);
       if (block)
 	{
 	  pthread_mutex_unlock(&g_mutex);
 	  return (block->addr);
 	}
-      else if (add_new_page(&g_free) == -1)
+      else if (add_new_page(&g_free_list) == -1)
 	good = 0;
     }
   pthread_mutex_unlock(&g_mutex);

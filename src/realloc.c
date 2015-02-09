@@ -10,7 +10,7 @@
 
 #include "malloc.h"
 
-extern t_header	*g_free;	
+extern t_header	*g_free_list;	
 pthread_mutex_t	g_mutex_r = PTHREAD_MUTEX_INITIALIZER;
 
 void		resize(t_header *p, size_t size)
@@ -21,7 +21,7 @@ void		resize(t_header *p, size_t size)
   new_free->size = p->size - size - sizeof(t_header);
   new_free->addr = (void *)((size_t)(new_free) + sizeof(t_header));
   new_free->next = NULL;
-  list__add(&g_free, new_free);
+  list__add(&g_free_list, new_free);
   p->size = size;
 }
 
