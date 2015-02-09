@@ -1,17 +1,17 @@
 /*
 ** free.c for malloc in /home/patoche/rendu/PSU_2014_malloc/src
-** 
+**
 ** Made by Hugo Prenat
 ** Login   <prenat_h@epitech.net>
-** 
+**
 ** Started on  Tue Feb  3 23:01:20 2015 Hugo Prenat
-** Last update Mon Feb  9 13:39:14 2015 Jean-Baptiste Grégoire
+** Last update Mon Feb  9 23:47:52 2015 Hugo Prenat
 */
 
 #include "malloc.h"
 
 extern t_header		*g_used;
-extern t_header		*g_free_list;	
+extern t_header		*g_free_list;
 extern pthread_mutex_t	g_mutex;
 
 void		merge_free_space(t_header **free_list, t_header *block1,
@@ -70,4 +70,3 @@ void		free(void *ptr)
   free_link(p);
   pthread_mutex_unlock(&g_mutex);
 }
-

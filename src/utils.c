@@ -1,11 +1,11 @@
 /*
 ** utils.c for malloc in /home/gregoi_j/rendu/PSU_2014_malloc
-** 
+**
 ** Made by Jean-Baptiste Grégoire
 ** Login   <gregoi_j@epitech.net>
-** 
+**
 ** Started on  Sun Feb  1 16:50:37 2015 Jean-Baptiste Grégoire
-** Last update Mon Feb  9 22:36:52 2015 Jean-Baptiste Grégoire
+** Last update Mon Feb  9 23:49:49 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -28,7 +28,8 @@ int		add_new_page(t_header **free_list)
   t_header	*new_page;
   t_header	*it;
 
-  if ((new_page = sbrk(21 * MALLOC_PAGE_SIZE + sizeof(t_header))) == (void *)(-1))
+  if ((new_page = sbrk(20 * MALLOC_PAGE_SIZE + sizeof(t_header)))
+      == (void *)(-1))
     {
       perror("add_new_page");
       return (-1);
@@ -60,4 +61,3 @@ void		*move_memory(t_header *block, size_t size)
   free(block->addr);
   return (new);
 }
-
