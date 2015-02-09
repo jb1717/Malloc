@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Sun Feb  1 16:44:56 2015 Jean-Baptiste Grégoire
-** Last update Thu Feb  5 22:46:22 2015 Jean-Baptiste Grégoire
+** Last update Mon Feb  9 13:41:46 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -19,6 +19,7 @@ void		*malloc(size_t size)
   char		good;
   t_header	*block;
 
+  printf("MALLOC %lu\n", size);
   if ((int64_t)(size) < 0)
     {
       errno = ENOMEM;
@@ -36,12 +37,14 @@ void		*malloc(size_t size)
       if (block)
 	{
 	  pthread_mutex_unlock(&g_mutex);
+	  printf("FIN MALLOC\n");
 	  return (block->addr);
 	}
       else if (add_new_page(&g_free_list) == -1)
 	good = 0;
     }
   pthread_mutex_unlock(&g_mutex);
+  printf("FIN MALLOC\n");
   return (NULL);
 }
 
@@ -49,6 +52,7 @@ void		*calloc(size_t nmemb, size_t size)
 {
   void		*ptr;
 
+  printf("CALLOC\n");
   if (nmemb == 0 || size == 0)
     return (NULL);
   if ((ptr = malloc(nmemb * size)) == NULL)

@@ -5,7 +5,7 @@
 ** Login   <prenat_h@epitech.net>
 ** 
 ** Started on  Tue Feb  3 23:01:20 2015 Hugo Prenat
-** Last update Tue Feb  3 11:25:11 2015 Jean-Baptiste Grégoire
+** Last update Mon Feb  9 13:39:53 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -29,6 +29,7 @@ void		*realloc(void *ptr, size_t size)
 {
   t_header	*p;
 
+  printf("REALLOC\n");
   if (!ptr)
     return (malloc(size));
   if (size == 0)

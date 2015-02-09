@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Thu Jan 29 11:59:28 2015 Jean-Baptiste Grégoire
-** Last update Thu Feb  5 16:44:36 2015 Jean-Baptiste Grégoire
+** Last update Mon Feb  9 13:47:29 2015 Jean-Baptiste Grégoire
 */
 
 #ifndef MALLOC_H_
@@ -28,12 +28,6 @@
 # else
 #  define REG_SIZE		4
 # endif
-# define RAISE_ERROR(where)	\
-do				\
-{				\
-  perror(where);		\
-  return (-1);			\
-} while (0)
 
 enum		e_move
   {

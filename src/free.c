@@ -5,7 +5,7 @@
 ** Login   <prenat_h@epitech.net>
 ** 
 ** Started on  Tue Feb  3 23:01:20 2015 Hugo Prenat
-** Last update Tue Feb  3 11:25:11 2015 Jean-Baptiste Grégoire
+** Last update Mon Feb  9 13:39:14 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -59,6 +59,7 @@ void		free(void *ptr)
 {
   t_header	*p;
 
+  printf("FREE\n");
   pthread_mutex_lock(&g_mutex);
   if (!ptr)
     {
