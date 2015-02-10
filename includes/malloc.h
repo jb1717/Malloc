@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Thu Jan 29 11:59:28 2015 Jean-Baptiste Grégoire
-** Last update Mon Feb  9 22:31:03 2015 Jean-Baptiste Grégoire
+** Last update Tue Feb 10 21:17:45 2015 Jean-Baptiste Grégoire
 */
 
 #ifndef MALLOC_H_
@@ -34,7 +34,8 @@ enum		e_move
     LEFT
   };
 
-typedef struct	s_header t_header;
+typedef struct	s_header	t_header;
+typedef struct	s_shortcut	t_shortcut;
 
 typedef struct	s_header
 {  
@@ -42,6 +43,12 @@ typedef struct	s_header
   void		*addr;
   t_header	*next;
 }		t_header;
+
+typedef struct	s_shortcut
+{
+  t_header	*ptr;
+  t_shortcut	*next;
+}		t_shortcut;
 
 void		free(void *ptr);
 void		*malloc(size_t size);

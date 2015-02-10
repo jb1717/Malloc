@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Fri Jan 30 19:35:34 2015 Jean-Baptiste Grégoire
-** Last update Thu Feb  5 13:07:58 2015 Jean-Baptiste Grégoire
+** Last update Tue Feb 10 18:34:16 2015 Jean-Baptiste Grégoire
 */
 
 #include <stdio.h>
@@ -13,14 +13,21 @@
 
 int	main(void)
 {
-  printf("%p\n", malloc(0));
-  printf("%p\n", malloc(0));
-  printf("%p\n", malloc(0));
-  printf("%p\n", malloc(0));
-  printf("%p\n", malloc(0));
-  printf("%p\n", malloc(0));
-  printf("%p\n", malloc(0));
-  printf("%p\n", malloc(0));
-  printf("%p\n", malloc(0));
+  char *toto;
+  char *tutu;
+  char *titi;
+  char *tete;
+  char *tata;
+
+  toto = malloc(10);
+  tutu = malloc(10);
+  titi = malloc(10);
+  tata = malloc(10);
+  tete = malloc(10);
+  free(tete);
+  free(tutu);
+  free(titi);
+  free(tata);
+  free(tete);
   return (0);
 }

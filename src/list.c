@@ -5,12 +5,12 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Sun Feb  1 15:27:08 2015 Jean-Baptiste Grégoire
-** Last update Mon Feb  9 22:28:13 2015 Jean-Baptiste Grégoire
+** Last update Tue Feb 10 14:53:26 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
 
-void		list__add(t_header **list, t_header *elem)
+void			list__add(t_header **list, t_header *elem)
 {
   t_header	*it;
   t_header	*save;
