@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Thu Jan 29 11:59:28 2015 Jean-Baptiste Grégoire
-** Last update Tue Feb 10 21:17:45 2015 Jean-Baptiste Grégoire
+** Last update Thu Feb 12 18:33:00 2015 Jean-Baptiste Grégoire
 */
 
 #ifndef MALLOC_H_
@@ -68,9 +68,16 @@ t_header	*best_fit(t_header **used_list, t_header **free_list,
 
 /* utils.c */
 int		malloc_init(t_header **free_list);
+int		init_value_malloc(size_t *size, pthread_mutex_t *m_mutex, t_header **free_list);
 int		add_new_page(t_header **free_list);
 void		*move_memory(t_header *block, size_t size);
 void		merge_free_space(t_header **free_list, t_header *block1,
 				 t_header *block2, enum e_move side);
+
+/* realloc.c */
+void		resize(t_header *p, size_t size, t_header **free_list);
+
+/* free.c */
+void		free_link(t_header *p, t_header **free_list);
 
 #endif /* !MALLOC_H_ */

@@ -5,23 +5,15 @@
 ** Login   <gregoi_j@epitech.net>
 ** 
 ** Started on  Sun Feb  1 16:44:56 2015 Jean-Baptiste Grégoire
-** Last update Tue Feb 10 14:53:42 2015 Jean-Baptiste Grégoire
+** Last update Thu Feb 12 18:33:17 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
 
-t_header	*g_used = NULL;
-t_header	*g_free_list = NULL;
-pthread_mutex_t	g_mutex = PTHREAD_MUTEX_INITIALIZER;
-
-void	init_value_malloc(size_t *size)
-{
-  if (*size % REG_SIZE != 0)
-    *size += REG_SIZE - (*size % REG_SIZE);
-  pthread_mutex_lock(&g_mutex);
-  if (!g_free_list)
-    malloc_init(&g_free_list);
-}
+static t_header		*g_used = NULL;
+static t_header		*g_free_list = NULL;
+static pthread_mutex_t	g_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t	g_mutex_r = PTHREAD_MUTEX_INITIALIZER;
 
 void		*malloc(size_t size)
 {
@@ -33,7 +25,8 @@ void		*malloc(size_t size)
       errno = ENOMEM;
       return (NULL);
     }
-  init_value_malloc(&size);
+  if (init_value_malloc(&size, &g_mutex, &g_free_list) == -1)
+    return (NULL);
   good = 1;
   while (good)
     {
@@ -60,6 +53,50 @@ void		*calloc(size_t nmemb, size_t size)
     return (NULL);
   bzero(ptr, nmemb * size);
   return (ptr);
+}
+
+void		*realloc(void *ptr, size_t size)
+{
+  t_header	*p;
+
+  if (!ptr)
+    return (malloc(size));
+  if (size == 0)
+    {
+      free(ptr);
+      return (NULL);
+    }
+  pthread_mutex_lock(&g_mutex_r);
+  p = (void *)((size_t)(ptr) - sizeof(t_header));
+  if (p->size == size)
+    {
+      pthread_mutex_unlock(&g_mutex_r);
+      return (ptr);
+    }
+  else if ((p->size > size) && (p->size - size > sizeof(t_header)))
+    {
+      resize(p, size, &g_free_list);
+      pthread_mutex_unlock(&g_mutex_r);
+      return (ptr);
+    }
+  pthread_mutex_unlock(&g_mutex_r);
+  return (move_memory(p, size));
+}
+
+void		free(void *ptr)
+{
+  t_header	*p;
+
+  pthread_mutex_lock(&g_mutex);
+  if (!ptr)
+    {
+      pthread_mutex_unlock(&g_mutex);
+      return ;
+    }
+  p = (void *)((size_t)(ptr) - sizeof(t_header));
+  list__delete(&g_used, p);
+  free_link(p, &g_free_list);
+  pthread_mutex_unlock(&g_mutex);
 }
 
 void		show_alloc_mem()

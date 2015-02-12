@@ -5,7 +5,7 @@
 ** Login   <gregoi_j@epitech.net>
 **
 ** Started on  Sun Feb  1 16:50:37 2015 Jean-Baptiste Grégoire
-** Last update Tue Feb 10 21:20:50 2015 Jean-Baptiste Grégoire
+** Last update Thu Feb 12 18:24:55 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
@@ -20,6 +20,20 @@ int		malloc_init(t_header **free_list)
   (*free_list)->size = 21 * MALLOC_PAGE_SIZE - sizeof(t_header);
   (*free_list)->addr = (void *)((size_t)(*free_list) + sizeof(t_header));
   (*free_list)->next = NULL;
+  return (0);
+}
+
+int		init_value_malloc(size_t *size, pthread_mutex_t *m_mutex,
+				  t_header **free_list)
+{
+  if (*size % REG_SIZE != 0)
+    *size += REG_SIZE - (*size % REG_SIZE);
+  pthread_mutex_lock(m_mutex);
+  if (!(*free_list))
+    {
+      if (malloc_init(free_list) == -1)
+	return (-1);
+    }
   return (0);
 }
 

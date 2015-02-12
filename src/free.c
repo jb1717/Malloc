@@ -5,13 +5,11 @@
 ** Login   <prenat_h@epitech.net>
 **
 ** Started on  Tue Feb  3 23:01:20 2015 Hugo Prenat
-** Last update Tue Feb 10 21:14:47 2015 Jean-Baptiste Grégoire
+** Last update Thu Feb 12 17:37:11 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
 
-extern t_header		*g_used;
-extern t_header		*g_free_list;
 extern pthread_mutex_t	g_mutex;
 
 void		merge_free_space(t_header **free_list, t_header *block1,
@@ -28,45 +26,29 @@ void		merge_free_space(t_header **free_list, t_header *block1,
     }
 }
 
-void		free_link(t_header *p)
+void		free_link(t_header *p, t_header **free_list)
 {
   t_header	*it;
   char		is_free;
 
   is_free = 0;
-  it = g_free_list;
+  it = *free_list;
   while (it)
     {
       if ((void *)((size_t)(it->addr) + it->size) == p)
       	{
-      	  merge_free_space(&g_free_list, it, p, RIGHT);
+      	  merge_free_space(free_list, it, p, RIGHT);
       	  is_free = 1;
 	  p = it;
       	}
       if ((void *)((size_t)(p->addr) + p->size) == it)
       	{
-      	  merge_free_space(&g_free_list, it, p, LEFT);
+      	  merge_free_space(free_list, it, p, LEFT);
       	  it = p;
       	  is_free = 1;
       	}
       it = it->next;
     }
   if (!is_free)
-    list__add(&g_free_list, p);
-}
-
-void		free(void *ptr)
-{
-  t_header	*p;
-
-  pthread_mutex_lock(&g_mutex);
-  if (!ptr)
-    {
-      pthread_mutex_unlock(&g_mutex);
-      return ;
-    }
-  p = (void *)((size_t)(ptr) - sizeof(t_header));
-  list__delete(&g_used, p);
-  free_link(p);
-  pthread_mutex_unlock(&g_mutex);
+    list__add(free_list, p);
 }
