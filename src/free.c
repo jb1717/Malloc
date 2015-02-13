@@ -5,12 +5,10 @@
 ** Login   <prenat_h@epitech.net>
 **
 ** Started on  Tue Feb  3 23:01:20 2015 Hugo Prenat
-** Last update Thu Feb 12 17:37:11 2015 Jean-Baptiste Grégoire
+** Last update Thu Feb 12 18:50:43 2015 Jean-Baptiste Grégoire
 */
 
 #include "malloc.h"
-
-extern pthread_mutex_t	g_mutex;
 
 void		merge_free_space(t_header **free_list, t_header *block1,
 				 t_header *block2, enum e_move side)
