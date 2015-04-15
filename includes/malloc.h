@@ -1,11 +1,11 @@
 /*
 ** malloc.h for malloc in /home/gregoi_j/rendu/PSU_2014_malloc
-** 
+**
 ** Made by Jean-Baptiste Grégoire
 ** Login   <gregoi_j@epitech.net>
-** 
+**
 ** Started on  Thu Jan 29 11:59:28 2015 Jean-Baptiste Grégoire
-** Last update Thu Feb 12 18:33:00 2015 Jean-Baptiste Grégoire
+** Last update Wed Apr 15 17:06:10 2015 Hugo Prenat
 */
 
 #ifndef MALLOC_H_
@@ -38,7 +38,7 @@ typedef struct	s_header	t_header;
 typedef struct	s_shortcut	t_shortcut;
 
 typedef struct	s_header
-{  
+{
   size_t	size;
   void		*addr;
   t_header	*next;
@@ -68,7 +68,8 @@ t_header	*best_fit(t_header **used_list, t_header **free_list,
 
 /* utils.c */
 int		malloc_init(t_header **free_list);
-int		init_value_malloc(size_t *size, pthread_mutex_t *m_mutex, t_header **free_list);
+int		init_value_malloc(size_t *size, pthread_mutex_t *m_mutex,
+				  t_header **free_list);
 int		add_new_page(t_header **free_list);
 void		*move_memory(t_header *block, size_t size);
 void		merge_free_space(t_header **free_list, t_header *block1,
